@@ -1,31 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+        Created By: Brij Mohan Dammani
+ *      Object: It will be used in all pages. It has all common things like header,tab menu, footer..etc. 
+*/
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
 
-public partial class MasterPage : System.Web.UI.MasterPage
-{
+
+public partial class MasterPage2 : System.Web.UI.MasterPage
+{  
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["aid"] == null)
+      
+        litdate.Text = System.DateTime.Now.ToString("D");
+        if (Page.User.Identity.Name.ToString() != "")
         {
-
-            Response.Redirect("Default.aspx");
+            litbal.Text = DB.ExecuteScaler(String.Format("Select Agent_current_bal from AgentBasicInfo where Agent_ID='{0}'", Page.User.Identity.Name.ToString().ToLower())).ToString();
+        }
+        else {
+            up12.Visible = false; 
         }
 
-        lblname.Text = Session["name"].ToString();
-    }
-    protected void Button10_Click(object sender, EventArgs e)
-    {
-        Session["aid"] = null;
-        Session["name"] = null;
-        Session["email"] = null;
-        Response.Redirect("Default.aspx");
-    }
-    protected void Button11_Click(object sender, EventArgs e)
-    {
-
+        submenu.Visible = (Page.User.Identity.Name.ToString() == "admin");
+        lblCreatedBy.Text = "Created By: Wissam Amin"; 
+     
     }
 }
